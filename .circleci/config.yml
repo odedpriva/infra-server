@@ -4,6 +4,8 @@ jobs:
     docker:
       - image: node:7.9.0
     working_directory: ~/${CIRCLE_PROJECT_REPONAME}
+    environment:
+     - IMAGE: ${DOCKER_ORGANIZATION}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}
     # working_directory: /Users/odedpriva/accezz/infrastructure/infra-server
     steps:
       - checkout
@@ -22,17 +24,17 @@ jobs:
       - run: 
             name: building image
             command: |
-              export IAMGE=${DOCKER_ORGANIZATION}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}
+              # export IMAGE=${DOCKER_ORGANIZATION}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}
               docker build -t ${IMAGE} .
       - run: 
             name: running tests
             command: |
-              export IAMGE="${DOCKER_ORGANIZATION}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}"
+              export IMAGE="${DOCKER_ORGANIZATION}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}"
               docker run -it ${IMAGE} npm test      
       - run:
             name: pushing to docker hub
             command: |
-              export IAMGE="${DOCKER_ORGANIZATION}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}"
+              export IMAGE="${DOCKER_ORGANIZATION}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}"
               export IMAGE_COMMIT="${DOCKER_ORGANIZATION}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
               docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
               docker tag ${IMAGE} ${IMAGE_COMMIT}        # (4)
