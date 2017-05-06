@@ -11,8 +11,8 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-        name: listing environment variable
-        command: env
+          name: listing environment variable
+          command: env
       # - run:
       #     name: installing docker client
       #     command: |
