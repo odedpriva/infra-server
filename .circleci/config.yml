@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: node:7.9.0
-    working_directory: ~/${CIRCLE_PROJECT_REPONAME}
+    working_directory: ~/my-app
     # working_directory: /Users/odedpriva/accezz/infrastructure/infra-server
     steps:
       - checkout
