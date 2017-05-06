@@ -22,7 +22,7 @@ jobs:
       - run: 
             name: building image
             command: |
-              export IAMGE="${DOCKER_ORGANIZATION}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}"
+              export IAMGE=${DOCKER_ORGANIZATION}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}
               docker build -t ${IMAGE} .
       - run: 
             name: running tests
