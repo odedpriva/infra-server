@@ -4,35 +4,36 @@ jobs:
     docker:
       - image: node:7.9.0
     working_directory: ~/${CIRCLE_PROJECT_REPONAME}
-    environment:
-      - IAMGE: "${DOCKER_ORGANIZATION}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}"
-      - IMAGE_COMMIT: "${DOCKER_ORGANIZATION}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
     steps:
       - checkout
       - setup_remote_docker
       - run:
           name: listing environment variable
           command: env
-      # - run:
-      #     name: installing docker client
-      #     command: |
-      #       set -x
-      #       VER="17.03.0-ce"
-      #       curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
-      #       tar -xz -C /tmp -f /tmp/docker-$VER.tgz
-      #       mv /tmp/docker/* /usr/bin
-      # - run: 
-      #       name: building image
-      #       command: |
-      #         docker build -t ${IMAGE} .
-      # - run: 
-      #       name: running tests
-      #       command: |
-      #         docker run -it ${IMAGE} npm test      
-      # - run:
-      #       name: pushing to docker hub
-      #       command: |
-      #         docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
-      #         docker tag ${IMAGE} ${IMAGE_COMMIT}        # (4)
-      #         docker push ${IMAGE}
-      #         docker push ${IMAGE_COMMIT}
+      - run:
+          name: installing docker client
+          command: |
+            set -x
+            VER="17.03.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            mv /tmp/docker/* /usr/bin
+      - run: 
+            name: building image
+            command: |
+              IAMGE=${DOCKER_ORGANIZATION}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}
+              docker build -t ${IMAGE} .
+      - run: 
+            name: running tests
+            command: |
+              IAMGE=${DOCKER_ORGANIZATION}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}
+              docker run -it ${IMAGE} npm test      
+      - run:
+            name: pushing to docker hub
+            command: |
+              IAMGE=${DOCKER_ORGANIZATION}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}
+              IMAGE_COMMIT=${DOCKER_ORGANIZATION}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}
+              docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
+              docker tag ${IMAGE} ${IMAGE_COMMIT}        # (4)
+              docker push ${IMAGE}
+              docker push ${IMAGE_COMMIT}
